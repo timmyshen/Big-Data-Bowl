@@ -1,0 +1,54 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+example.play.0 <-
+  example.play %>% 
+  dplyr::filter(frame.id == 1, team %in% c("away", "ball"))
+
+example.play.0
+```
+
+```{r}
+example.play.0 %>%
+  ggplot(aes(x=x, y=y)) +
+  geom_point() +
+  geom_vline(xintercept = 85, linetype = "dashed") +
+  xlim(0, 120) + ylim(0, 53.3)
+```
+
+```{r}
+players <- readr::read_csv("./Data/players.csv")
+```
+
+```{r}
+players %>% filter(nflId %in% c(2550272, 2552652))
+```
+
+```{r}
+the.play <- example.play %>% left_join(players)
+
+# the.play %>% filter(!is.na(event))
+
+the.play.0 <-
+  the.play %>% 
+  dplyr::filter(frame.id > 0, frame.id <= 60,
+                team %in% c("away", "ball"),
+                !(PositionAbbr %in% c("T", "G", "C")))
+
+the.play.0
+```
+
+```{r}
+the.play.0 %>%
+  ggplot(aes(x=x, y=y, color = displayName, shape = team)) +
+  geom_point() +
+  # ggrepel::geom_text_repel(aes(label=displayName)) +
+  # geom_text(aes(label=displayName)) +
+  geom_vline(xintercept = 85, linetype = "dashed") +
+  xlim(0, 120) + ylim(0, 53.3) + xlab("") + ylab("")+
+  theme_minimal()
+```
+
